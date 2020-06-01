@@ -1,8 +1,5 @@
 # React Form
 
-### Installing
-
-
 install node modules
 ```
 npm install
