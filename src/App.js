@@ -108,6 +108,8 @@ const App = () => {
           <h2>Form</h2>
           {/* iterates on each item of data.json from above and will render an input component or select compoent depends on the type */}
           {Object.values(data).map((item, index) => {
+            // Object.assign creates a copy of the object from item, I'll get all the options with a new element "Select Gender" so "Female" won't be the default value anymore.
+            if (item.name === 'Gender') item = Object.assign({}, item, { options: ["Select a gender", ...item.options] })
             if (item.type === "dropdown" || item.type === "multi-select") {
               return (
                 <SelectInput

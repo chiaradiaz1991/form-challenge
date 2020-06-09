@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleInput } from "./styles";
 import ReactTooltip from "react-tooltip";
 import Error from '../Error/Error';
@@ -10,10 +10,15 @@ const TextInput = ({ value, storeValues, clear }) => {
   const [error, setError] = useState('');
   const [ valueInput, setValueInput ] = useState('');
 
+  // if prop clear is true, the input value will be ''
+  useEffect(() => {
+    if (clear) setValueInput('');
+  }, [clear]);
+
   const handleChange = (e) => {
     //obtain name and value from the user
     setValueInput(e.target.value);
-    const newVal = valueInput;
+    const newVal = e.target.value;
     const name = e.target.name;
     // this const will evaluate wether it's an error or empty
     const hasError = newVal === "" || validation(name, newVal);
@@ -32,8 +37,7 @@ const TextInput = ({ value, storeValues, clear }) => {
           name={name}
           type={type}
           onChange={(e) => handleChange(e)}
-          value={clear ? '' : valueInput}
-          // value={valueInput}
+          value={valueInput}
           data-tip={description && description}
         />
       </div>

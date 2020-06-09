@@ -1,21 +1,21 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactTooltip from "react-tooltip";
 import { StyledFielSelect } from "./styles";
 
-
 const SelectInput = ({ value, storeValues, fieldType, clear }) => {
   const { name, description, options } = value;
-  const [ valueInput, setValueInput ] = useState([]);
+  const [valueInput, setValueInput] = useState();
 
   const multiple = fieldType === "multi-select";
 
+  // if prop clear is true, the input value will be ''
+  useEffect(() => {
+    if (clear) setValueInput(multiple? '' : options[0]);
+  }, [clear]);
+
   const handleChange = (e) => {
-    
     setValueInput(e.target.options);
-    // let options = e.target.options;
-    let options = clear ? '' : valueInput; // revisar
-    console.log({valueInput})
+    let options = e.target.options;
     let values = [];
     // iterates on each element of options array
     for (var i = 0, l = options.length; i < l; i++) {
@@ -38,14 +38,11 @@ const SelectInput = ({ value, storeValues, fieldType, clear }) => {
             name={name}
             onChange={e => handleChange(e)}
             multiple={multiple}
-            // value={clear ? '' : valueInput}
+            defaultValue={!multiple && options && options[0]}
           >
             {options !== undefined && (
-              options.map((elem, index) => (
-                <>
-                  <option key={`option ${index}`}>{elem}</option>
-                </>
-              )))
+              options.map((elem, index) => <option disabled={elem === "Select a gender"} key={`option ${index}`}>{elem}</option>
+              ))
             }
           </StyledFielSelect>
         }
