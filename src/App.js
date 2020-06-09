@@ -5,8 +5,8 @@ import data from "./database.json";
 
 // components
 import SelectInput from "./Components/Select/Select";
-import TextInput from "./Components/TextInput/index";
-import ProgressBar from "./Components/ProgressBar/index";
+import TextInput from "./Components/TextInput/TextInput";
+import ProgressBar from "./Components/ProgressBar/ProgressBar";
 
 // styles
 import {
@@ -31,14 +31,14 @@ const initialState = {
 const App = () => {
   const [state, setState] = useState(initialState);
   const [percentage, setPercentage] = useState(0);
+  const [clearValues, setClearValues] = useState(false);
 
   const errorsMap = Object.values(state).map(s => s.error)
   const validFieldsFilter = errorsMap.filter(error => error === false).length;
-  const valideFields= validFieldsFilter !== 8;
+  const valideFields = validFieldsFilter !== 8;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     // iterate on each value of the state and converts each element to a JSON string
     var data = Object.values(state).map(d => JSON.stringify(d));
     var link = window.document.createElement("a");
@@ -49,11 +49,11 @@ const App = () => {
     link.setAttribute("download", "submission.csv");
     link.click();
 
-    // Reset form values // known issue: doen't work.
-    setState(initialState);
+    setClearValues(true);
+    setState(initialState)
     setPercentage(0);
-
   };
+
 
   useEffect(() => {
     // valid fields are the ones that the value error is in false from the state
@@ -67,7 +67,6 @@ const App = () => {
     // with every update, I will have the previous values and it will update each key, value and error from the state.
     setState((prev) => ({ ...prev, [name]: { value, error: hasError } }));
   };
-
 
   // this function set the type of input of the new field
   const transformValues = (type) => {
@@ -107,7 +106,7 @@ const App = () => {
       <Wrapper>
         <StyledForm>
           <h2>Form</h2>
-           {/* iterates on each item of data.json from above and will render an input component or select compoent depends on the type */}
+          {/* iterates on each item of data.json from above and will render an input component or select compoent depends on the type */}
           {Object.values(data).map((item, index) => {
             if (item.type === "dropdown" || item.type === "multi-select") {
               return (
@@ -117,17 +116,19 @@ const App = () => {
                   fieldType={item.type}
                   // callback handleStoreValues function to obtain the values from the child component
                   storeValues={handleStoreValues}
+                  clear={clearValues}
                 />
               );
             } else {
               return (
                 <TextInput
-                // execute the transformValues function to obtain desired value
+                  // execute the transformValues function to obtain desired value
                   type={transformValues(item.type)}
                   value={item}
                   key={`item ${item.id}`}
                   // callback handleStoreValues function to obtain the values from the child component
                   storeValues={handleStoreValues}
+                  clear={clearValues}
                 />
               );
             }

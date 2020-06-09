@@ -5,13 +5,15 @@ import Error from '../Error/Error';
 import { validation } from "../../utils/Validation";
 
 
-const TextInput = ({ value, storeValues }) => {
+const TextInput = ({ value, storeValues, clear }) => {
   const { name, type, description, id } = value;
   const [error, setError] = useState('');
+  const [ valueInput, setValueInput ] = useState('');
 
   const handleChange = (e) => {
     //obtain name and value from the user
-    const newVal = e.target.value;
+    setValueInput(e.target.value);
+    const newVal = valueInput;
     const name = e.target.name;
     // this const will evaluate wether it's an error or empty
     const hasError = newVal === "" || validation(name, newVal);
@@ -30,6 +32,8 @@ const TextInput = ({ value, storeValues }) => {
           name={name}
           type={type}
           onChange={(e) => handleChange(e)}
+          value={clear ? '' : valueInput}
+          // value={valueInput}
           data-tip={description && description}
         />
       </div>

@@ -1,16 +1,21 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import ReactTooltip from "react-tooltip";
 import { StyledFielSelect } from "./styles";
 
 
-const SelectInput = ({ value, storeValues, fieldType }) => {
+const SelectInput = ({ value, storeValues, fieldType, clear }) => {
   const { name, description, options } = value;
+  const [ valueInput, setValueInput ] = useState([]);
 
   const multiple = fieldType === "multi-select";
 
   const handleChange = (e) => {
-    let options = e.target.options;
+    
+    setValueInput(e.target.options);
+    // let options = e.target.options;
+    let options = clear ? '' : valueInput; // revisar
+    console.log({valueInput})
     let values = [];
     // iterates on each element of options array
     for (var i = 0, l = options.length; i < l; i++) {
@@ -33,6 +38,7 @@ const SelectInput = ({ value, storeValues, fieldType }) => {
             name={name}
             onChange={e => handleChange(e)}
             multiple={multiple}
+            // value={clear ? '' : valueInput}
           >
             {options !== undefined && (
               options.map((elem, index) => (
